@@ -1,15 +1,29 @@
 # Meditations
 
-A personal learning wiki maintained by an LLM agent named Marcus (after Marcus Aurelius). You drop raw sources and observations; Marcus turns them into a compounding knowledge base of plain markdown files you own. For the authoritative schema, read [AGENTS.md](AGENTS.md).
+An AI agent that turns your scattered observations, books, and podcasts into a living knowledge graph you actually use.
+
+Named after Marcus Aurelius, who kept his notes for himself and somehow we're still reading them 1,800 years later. The agent inside is called Marcus, for the same reason.
+
+---
+
+## Why
+
+I always wanted to journal for the active recall part. Writing things down is how you actually remember them.
+
+But I never stuck with it, because looking back was useless. A journal is static. Scattered observations, no connections, nothing to pull from when you actually need it.
+
+Meditations solves the retrieval half. You drop observations in plain English. Marcus files them, auto-links them to related notes, builds entity pages for every person you mention, and surfaces patterns over time. You can ask questions against your own history and he answers from it. He also pings you with old observations so nothing dies in an archive.
+
+It is not a productivity tool. It is an external memory that happens to be written in your own words.
 
 ---
 
 ## Design principles
 
-Meditations rests on four constraints. They are the load-bearing decisions — everything else is downstream.
+Four load-bearing decisions. Everything else is downstream.
 
 - **File over app.** Plain markdown only. If any specific AI tool disappears tomorrow, the wiki is still yours, readable in any editor, queryable with standard Unix tools.
-- **BYOAI (bring your own AI).** The schema and skills are self-contained. A fresh agent — any Claude version, Codex, OpenCode, any future LLM — can pick up maintenance with no external dependencies.
+- **BYOAI (bring your own AI).** The schema and skills are self-contained. A fresh agent (any Claude version, Codex, OpenCode, any future LLM) can pick up maintenance with no external dependencies.
 - **Explicit.** All state is visible and editable in plain-text files. No hidden harness memory, no vector DBs, no binary caches.
 - **Yours.** The data lives locally, in your own repo, in a format you can read, edit, version, move, or throw away without permission.
 
@@ -19,8 +33,8 @@ Prior art: [Karpathy's "LLM Wiki" gist](https://gist.github.com/karpathy/442a6bf
 
 ## Prerequisites
 
-- [Claude Code CLI](https://claude.com/claude-code) (required — this repo's skills are Claude Code skills).
-- [Obsidian](https://obsidian.md/) (optional but recommended — the wiki graph view is pleasant to navigate).
+- [Claude Code CLI](https://claude.com/claude-code). Required. The skills in this repo are Claude Code skills.
+- [Obsidian](https://obsidian.md/). Optional but recommended. The graph view is where the "compounding knowledge base" thing stops being an abstraction and starts being a thing you can see.
 
 ---
 
@@ -32,13 +46,13 @@ cd Meditations
 claude
 ```
 
-Send any message. On first run Marcus will notice `wiki/entities/me.md` is missing and invoke the onboarding skill — it asks four short questions (your name, your focus, what you want the wiki to help with, tone preference) and writes your self page. After that the wiki is ready.
+Send any message. On first run Marcus notices `wiki/entities/me.md` is missing and runs the onboarding skill: four short questions (your name, your focus, what you want the wiki to help with, tone preference) and he writes your self page. You are now live.
 
-If you want Obsidian graph colors, open the vault in Obsidian and follow [docs/obsidian-graph-colors.md](docs/obsidian-graph-colors.md) — takes about two minutes.
+For Obsidian graph colors, open the vault in Obsidian and follow [docs/obsidian-graph-colors.md](docs/obsidian-graph-colors.md). Two minutes.
 
-### Running without a 24/7 terminal
+### Running it from your phone
 
-You can make `save:` and `wiki:` reachable from your phone without keeping Claude Code open on a laptop all day, by wiring a messaging channel (Telegram, etc.) to a scheduled harness (cron, agent platform) that invokes Marcus when a message lands. The mechanics are outside this repo and depend on your setup — any harness that can call Claude on a schedule works.
+You can also use Marcus entirely through a messaging app (Telegram, iMessage relay, anything you can wire up), so `save:` and `wiki:` work from anywhere without keeping a terminal open on a laptop all day. Any harness that can call Claude on a schedule works. The plumbing is outside this repo because it depends on your setup.
 
 ---
 
@@ -55,7 +69,7 @@ You can make `save:` and `wiki:` reachable from your phone without keeping Claud
 | `weekly-reflection` | Sundays (opt-in), or manual `weekly reflection` | Light prompt to surface missed observations |
 | `wiki-lint` | `lint`, `health-check`, `audit [slug]`, `lint [category]` | Health-check the wiki for broken links, stale content, and structural issues |
 
-A ninth skill, `onboarding`, runs once on first session to create `wiki/entities/me.md`. Each skill has a full behavior spec in [skills/](skills/). Triggers match [AGENTS.md](AGENTS.md) section 7 exactly.
+A ninth skill, `onboarding`, runs once on the first session to create `wiki/entities/me.md`. Each skill has a full behavior spec in [skills/](skills/). Triggers match [AGENTS.md](AGENTS.md) section 7 exactly.
 
 ---
 
@@ -69,24 +83,24 @@ save: asking "what would have to be true" before solutions changed the tone
 save: giving direct feedback to a teammate worked, feedback sandwich did not
 ```
 
-After a few weeks Marcus notices patterns about your communication style and how different people respond.
+After a few weeks Marcus starts noticing patterns about your communication style and how different people respond.
 
-### Interpersonal notes about specific people
+### Interpersonal notes
 
 ```
 save: a coworker prefers bullet summaries, not paragraphs
 save: another teammate responds to direct, hates hedging
 ```
 
-Marcus builds entity pages for each person in `wiki/entities/people/`. Over time these become a quiet reference for "how do I work with X" that you can query before any important 1:1.
+Marcus builds entity pages for each person in `wiki/entities/people/`. Over time these become a quiet reference for "how do I actually work with X" that you can query before any important 1:1.
 
-### Reading
+### Reading and listening
 
 ```
 ingest: raw/inspired-2017-cagan.pdf
 ```
 
-Marcus reads, discusses key takeaways with you, writes a summary in `wiki/sources/`, and cross-links to your own observations. Reading compounds with experience instead of disappearing into a highlights file you never open.
+Marcus reads, discusses key takeaways with you, writes a summary in `wiki/sources/`, and cross-links to your own observations. A principle from a book in February can link to a real observation you log in June. Reading compounds with experience instead of disappearing into a highlights file you never open. Same for podcasts, articles, lectures, or anything else you drop into `raw/`.
 
 ### Life heuristics
 
@@ -101,10 +115,10 @@ Not everything has to be about work. Personal heuristics compound the same way.
 
 ## Folder map
 
-- `raw/` — immutable source files you drop in; Marcus reads but never modifies.
-- `wiki/` — everything Marcus writes: `sources/` for ingest summaries, `observations/`, `concepts/`, `entities/`, `briefs/`, `queries/`, plus `INDEX.md` and `log.md`.
-- `skills/` — the nine skill files Marcus follows (eight operations + onboarding).
-- `docs/` — `COACH.md` (the planning-partner agent) and `obsidian-graph-colors.md`.
+- `raw/`: immutable source files you drop in. Marcus reads but never modifies.
+- `wiki/`: everything Marcus writes. `sources/` for ingest summaries, `observations/`, `concepts/`, `entities/`, `briefs/`, `queries/`, plus `INDEX.md` and `log.md`.
+- `skills/`: the nine skill files Marcus follows (eight operations + onboarding).
+- `docs/`: `COACH.md` (the planning-partner agent) and `obsidian-graph-colors.md`.
 
 Full tree in [AGENTS.md](AGENTS.md) section 5.
 
@@ -112,7 +126,7 @@ Full tree in [AGENTS.md](AGENTS.md) section 5.
 
 ## Coach
 
-Meditations ships with a second agent, **Coach**, defined in [docs/COACH.md](docs/COACH.md). Coach is a planning partner — a long-conversation, stress-test-your-ideas, hand-you-an-execution-prompt assistant for changes to the wiki or to Marcus itself. Marcus executes, Coach plans. Load COACH.md in a separate session when you want to think about what Meditations should do next.
+Meditations ships with a second agent, **Coach**, defined in [docs/COACH.md](docs/COACH.md). Coach is a planning partner: long conversation, stress-test your ideas, hand you an execution prompt. Marcus executes, Coach plans. Load COACH.md in a separate session when you want to think about what Meditations should do next instead of running Marcus in reactive mode.
 
 ---
 
