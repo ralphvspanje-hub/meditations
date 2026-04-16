@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+*.swp
+.claude/
+
+# Obsidian: ignore the whole folder (color scheme lives in docs/obsidian-graph-colors.md)
+.obsidian/
