@@ -1,3 +1,7 @@
+---
+tags: [hidden]
+---
+
 # Brief captures
 
 This directory holds verbatim captures of rich multi-claim dumps — narrative events (a hackathon, a long 1:1, a recruiter screen), catch-up end-of-day reflections where several things are dumped at once, or week-in-reviews too dense for a single observation.

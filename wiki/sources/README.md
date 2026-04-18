@@ -1,3 +1,7 @@
+---
+tags: [hidden]
+---
+
 # Source summary pages
 
 This directory holds LLM-written summary pages — one per ingested raw source.
