@@ -65,6 +65,27 @@ Preserve the user's phrasing exactly. Do not rewrite, summarize, or clean up.
 
 **Enumerated-list rule.** When the source dump contains a numbered or bulleted list, every item in that list becomes a candidate atom. Do not collapse an item into an earlier atom on grounds of adjacency, thematic overlap, or surface similarity. An item from an enumerated list is suppressed only when it is a pure word-level paraphrase of an atom already extracted from a different source section — the threshold is strict. Items that restate a claim with new framing, new examples, or a different mechanism are distinct claims and get their own atom. The user or the speaker chose to enumerate the items separately; that choice is a signal that the items are claim-level-distinct, even when they share vocabulary with earlier material.
 
+**Atom integrity rule (inverse of the enumerated-list rule).** General principle: *peer claims split, qualifiers merge.* The enumerated-list rule says when to split; this rule says when NOT to split. Together they cover the full split/merge decision space.
+
+A clause is a distinct atom only if it can stand alone as a testable claim without weakening, qualifying, or removing the rationale from an adjacent claim when that adjacent claim is read independently. Rationale clauses, caveats, and qualifiers grammatically depend on a parent claim and belong inside the atom they qualify — splitting them weakens both the parent atom (which loses nuance or justification) and the orphan atom (which loses context).
+
+**Dependency test.** Before proposing a non-enumerated candidate atom, read the candidate's quote-lift as a standalone utterance, then read the adjacent atom's quote-lift with the candidate removed. If removing the candidate weakens the adjacent atom — strips a reason, removes a limit, narrows a scope that was load-bearing for the claim — the candidate is not a distinct atom. Merge its text back into the adjacent atom's quote.
+
+**Linguistic markers.** High-signal cues that a candidate is a dependent clause, not a peer claim:
+- **Rationale:** "because X", "the reason is X", "since X", opening causal conjunction relative to a prior claim.
+- **Caveat:** "unless X", "except when X", "but only if X", opening a conditional limit on the prior claim.
+- **Qualifier:** "in particular X", "specifically X", "especially X", narrowing the prior claim to a subset.
+
+When any of these markers open a candidate atom's quote-lift and the adjacent atom carries the parent claim, merge without running the dependency test. The markers are sufficient evidence.
+
+**Enumerated-list items override this rule.** Numbered (1, 2, 3) or lettered ((a), (b), (c)) or bulleted items are peer claims by construction, regardless of linguistic markers. The atom integrity rule applies only to non-enumerated candidates.
+
+**Worked examples:**
+- Candidate: "Because people take better advantage out of feedback when they are doing better." → rationale clause opening with "because"; strips the reason for the push-when-thriving claim. Merge back into the push/coach atom.
+- Candidate: "Unless there are things you missed that could have been factored in." → caveat clause opening with "unless"; strips the limit on the don't-emphasize-failures claim. Merge back.
+- Candidate: "(b) ferocity / intensity — passion and drive..." → enumerated-list item (letter `b`); peer to (a) and (c). Integrity rule does not apply; split holds.
+- Candidate: "Team is the variable" and "Recruiting works best through your network" → distinct non-enumerated claims, neither weakens the other when read independently. Both keep their own atoms.
+
 **Section-grouping pass.** Build a map of source-dump section → candidate atoms. Sections are identified by any of the following structural signals:
 
 - A numbered or bulleted list header (e.g. "3 patterns of people that join unicorns:", "Traits of successful startups:").
@@ -143,9 +164,10 @@ Between Step 2's draft assembly and the proposal presentation to the user, dispa
 2. Marcus's draft proposal: title, brief provenance and source_ref, the section-grouping map from Step 1, and every atom with its title, verbatim quote, and tags.
 3. The four review criteria below. No other instructions, no free-form "improve the proposal" framing.
 
-**Four review criteria.**
+**Five review criteria.**
 
 - **Missed atoms.** Does the dump contain a claim the draft does not extract? Focus on enumerated lists (numbered or bulleted items) and explicitly numbered sub-points inside paragraphs. Each such item is a distinct claim unless it is a pure word-level paraphrase of an already-extracted atom. Flag misses by quoting the span from the dump and proposing a title and tags.
+- **Over-splitting.** Does the draft split a rationale clause, caveat clause, or qualifier clause into its own atom when it should sit inside an adjacent atom? Apply the atom integrity rule: a non-enumerated candidate atom whose quote-lift opens with a rationale marker ("because", "since", "the reason is"), a caveat marker ("unless", "except when", "but only if"), or a qualifier marker ("in particular", "specifically", "especially") is a dependent clause, not a peer claim. Flag over-splits by naming the atom and the adjacent atom it should merge back into. Enumerated-list items ((a), (b), (c), 1., 2., 3., bullets) are exempt — they are peer claims by construction.
 - **Section-segmentation drift.** Is any atom assigned to a section that does not match the claim's actual place in the dump's argument arc? A foundational-insight claim that sits inside a larger thesis is part of that section, not a new one. Flag by naming the atom and the section it should sit in.
 - **Sibling-tag parallelism.** For each section with 2+ atoms, identify every primary theme tag implied by the section's heading or opening sentence — not a single theme tag, but the full set. A section titled "A vision on the future of pm" implies at least `pm` and `future-of-work`; if the section is framed around AI's effect on PM, `ai` is also a theme tag. Every sibling atom must carry at least one of the section's theme tags, and ideally all that apply to the atom's claim. Flag any sibling missing a theme tag its peers carry.
 - **Entity drift.** Is the draft proposing an entity stub for a person or company that is illustrative rather than interactive? Podcast speakers, authors cited for color, illustrative company examples, are reference-origin at best and usually do not warrant a stub. Flag any such entity so Marcus can drop it before presenting.
@@ -158,6 +180,10 @@ ATOMS TO ADD:
   Quote: "[verbatim from dump]"
   Tags: [...]
   Source section: [...]
+
+ATOMS TO MERGE:
+- Atom [title or index]: merge back into atom [adjacent title or index]
+  Reason: [rationale / caveat / qualifier] clause, opens with "[marker]" — dependent on parent
 
 TAGS TO ADD:
 - Atom [title or index]: add [tag1, tag2]
@@ -176,6 +202,7 @@ If a criterion has no findings, output that criterion heading followed by "none"
 **Merge behavior.** Marcus applies the delta mechanically:
 
 - Atoms to add: insert them into the atom list with the proposed title, quote, and tags. Re-run the Step 2 sibling-tag-parallelism check on the expanded list.
+- Atoms to merge: remove the over-split atom from the list and append its quote text to the adjacent atom's quote-lift, preserving verbatim phrasing and inserting a space or paragraph break as the source dump does. No tag changes on the surviving parent atom unless the delta also includes a TAGS TO ADD line for it.
 - Tags to add: append the named tags to the named atoms. No removal or reordering.
 - Entities to drop: remove them from the brief's `entities:` list and skip any stub creation for them.
 - Segmentation fixes: update the section-grouping map, then re-run the Step 2 sibling-tag-parallelism check using the new map.
@@ -319,7 +346,9 @@ Append to CHANGELOG.md if:
 - Single-entity brief Mentions noise: if a brief and all its atoms name the same single entity, the Mentions section on that entity becomes a flat list of (1 brief + N atoms) all pointing to the same place. Watch whether this feels noisy after 3+ single-entity briefs. If yes, consider nested-list formatting (brief as parent bullet, atoms as indented children) rather than dropping atom mentions. Do not change behavior on one data point.
 - If override prompts from Step 2 fire but the user consistently declines them, the per-atom cue detection is over-firing. Narrow the cues or raise the threshold. One decline is not enough; watch for a pattern across 3+ briefs before touching the cue list.
 - If the user pushes back on a typo fix (says "that was intentional" or "put it back"), log it in CHANGELOG.md. Three pushbacks across different briefs means the rules are too loose — tighten.
-- If the user finds a sibling-tag gap that both the Step 2 sibling-tag-parallelism check and the Step 2b reviewer subagent missed, log the edge case in CHANGELOG.md. A double miss on the same axis means the subagent prompt needs tightening on that criterion — the prescriptive rule alone is not the failure point.
+- If the user finds a sibling-tag gap that both the Step 2 sibling-tag-parallelism check and the Step 2b reviewer subagent missed, log the edge case in CHANGELOG.md. A double miss on the same axis means the subagent prompt needs tightening on that criterion — the prescriptive rule alone is not the failure point. Watch for cases where the missing tag is one that a majority of siblings in the section share but the section's heading or opening sentence does not imply. If such cases repeat, consider extending the parallelism check to treat majority-shared sibling tags as candidate section themes, not only heading-implied tags.
 - If the user finds a missing atom that both Step 1's enumerated-list rule and the Step 2b subagent missed, log the edge case in CHANGELOG.md. Same reasoning: double miss means the subagent's missed-atoms criterion needs sharpening.
+- If the user finds an over-split atom (rationale, caveat, or qualifier clause filed as its own atom) that both the Step 1 atom integrity rule and the Step 2b subagent missed, log the edge case in CHANGELOG.md. The linguistic-marker list may need extending or the dependency test refining.
 - If the Step 2b subagent returns an empty delta but the user then flags real gaps at approval time, log it. The subagent is under-firing and its prompt should be examined.
 - If the Step 2b subagent returns a delta so large it trips the 5-atoms-or-30%-tags gate on 3+ briefs, the subagent is over-firing. The review criteria may be too permissive and should be narrowed.
+- If the Step 2b subagent consistently proposes atoms-to-merge that the user rejects (Marcus merges per the rule but the user re-splits during approval), the atom integrity rule's dependency test is over-firing. Narrow the linguistic-marker list or tighten the test.

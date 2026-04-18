@@ -1,5 +1,13 @@
 # Marcus Changelog
 
+## 2026-04-18 — brief-drop: atom integrity rule (peer claims split, qualifiers merge)
+
+**What happened:** Step 2b's first run over-split where the enumerated-list rule had under-split. Rationale, caveat, and qualifier clauses grammatically dependent on an adjacent claim were getting promoted to standalone atoms, weakening both the parent (which lost nuance or justification) and the orphan (which lost context). Step 1 and Step 2b both had clear guidance on WHEN to split and no guidance on when NOT to split.
+
+**Changed:** Added the atom integrity rule to `skills/brief-drop/SKILL.md` Step 1 as the inverse of the enumerated-list rule: *peer claims split, qualifiers merge.* A non-enumerated clause is a distinct atom only if removing it does not weaken an adjacent atom's claim when the adjacent atom is read independently. Three linguistic-marker categories (rationale: "because / since / the reason is"; caveat: "unless / except when / but only if"; qualifier: "in particular / specifically / especially") are high-signal cues for merge. Enumerated-list items are exempt by construction. Step 2b's review criteria expand from four to five (new: "Over-splitting"). Subagent output format gains an ATOMS TO MERGE section peer to ATOMS TO ADD; merge behavior appends the over-split atom's quote back to the parent atom verbatim with no tag changes on the parent. Self-observation triggers gain an over-merging trigger (if the user rejects proposed merges, the dependency test is over-firing) and a majority-shared-sibling-tags note in the sibling-tag-gap trigger for a candidate future extension.
+
+**File:** `skills/brief-drop/SKILL.md`.
+
 ## 2026-04-18 — brief-drop: Step 2b reviewer subagent pass
 
 **What happened:** The prescriptive Step 1 and Step 2 rules partially fixed tag drift and under-extraction on large briefs, but a structural blindspot remained: the same Marcus instance that segments sections and picks theme tags cannot reliably catch its own segmentation or theme-selection errors. Single-pass self-review misses judgment-call cases even when the mechanical rules fire correctly.
