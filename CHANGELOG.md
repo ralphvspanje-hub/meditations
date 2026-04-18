@@ -1,5 +1,21 @@
 # Marcus Changelog
 
+## 2026-04-18 — brief-drop: testable-heuristic refactor (replaces the rule pile)
+
+**What happened:** Iterating on brief-drop through the day accumulated several prescriptive rules (enumerated-list rule, atom integrity rule, continuation-arc merge rule, section-grouping pass, sibling-tag-parallelism check, Step 2b subagent) to stabilize atom-boundary decisions. Each new rule competed with earlier rules and got applied inconsistently across runs; the same failure shapes (enumerated sub-lists collapsed into a parent atom, trailing normative sentences absorbed, rationale clauses over-split) kept recurring. Atom-boundary decisions are semantic judgment; procedural rules have a ceiling for stabilizing that, and LLMs pattern-match against concrete examples more reliably than they follow long rule chains.
+
+**Changed:** Major refactor of `skills/brief-drop/SKILL.md`. Replaced the Step 1 rule pile with a single functional criterion — *each atom is a testable heuristic* — operationalized as: (a) could the claim be evaluated true or false against a future situation, and (b) can it stand on its own without an adjacent claim. Three consequences stated inline (fold dependent clauses, split distinct heuristics, default to splitting enumerated items). Four worked micro-examples (A: enumerated sub-list; B: trailing normative sentence; C: rationale/caveat/qualifier clause; D: continuation across paragraphs) anchor each recurring shape. Section-grouping pass shortened to a two-paragraph note — sections drive tag parallelism only, not atom identification. Step 2's parallelism check simplified to one paragraph. Step 2b's review criteria refactored from five to four (Over-folded atoms, Over-split atoms, Sibling-tag parallelism, Entity drift), all anchored to the same testable-heuristic criterion; ATOMS TO SPLIT replaces ATOMS TO ADD in the subagent output format; SEGMENTATION FIXES removed. Self-observation triggers pruned to reference the examples rather than rules that no longer exist. Kept intact: Step 2b subagent pass, mandatory final-proposal block, Step 3 precondition, typo-fix pass, provenance detection, frontmatter conventions. Trades ~1000 words of prescriptive rule text for ~400 words of criterion plus examples.
+
+**File:** `skills/brief-drop/SKILL.md`.
+
+## 2026-04-18 — brief-drop: approval-skip hole closed
+
+**What happened:** Under the Step 2b silent-merge path (subagent delta under the 5-atoms-or-30%-tags size gate), Marcus could read "silent merge" as "proceed directly to Step 3" and file atoms, brief, log entry, and INDEX update without the user seeing the final proposal. The Step 2b text said the subagent runs between draft assembly and the proposal presentation, but the silent-merge branch never explicitly re-looped back to the Step 2 presentation step. The delta-size gate's user-prompt only surfaces the subagent's delta for large changes; it does not serve as the final proposal-approval checkpoint for small-delta paths.
+
+**Changed:** Two belt-and-suspenders edits to `skills/brief-drop/SKILL.md`. First, Step 2b now ends with an explicit "Present final proposal to the user. This step is mandatory and never skipped" block stating that after any subagent merge (silent or size-gated), Marcus always presents the final proposal in the Step 2 format — full title, provenance, entities, every atom with title, verbatim quote, and tags — closing with "Proceeding to filing only on explicit approval." Second, Step 3 gains an opening precondition: Step 3 never runs without explicit approval from the user on the final post-subagent proposal. A silent subagent merge is not approval. A size-gate approval on the subagent's delta alone is not approval of the final proposal.
+
+**File:** `skills/brief-drop/SKILL.md`.
+
 ## 2026-04-18 — brief-drop: atom integrity rule (peer claims split, qualifiers merge)
 
 **What happened:** Step 2b's first run over-split where the enumerated-list rule had under-split. Rationale, caveat, and qualifier clauses grammatically dependent on an adjacent claim were getting promoted to standalone atoms, weakening both the parent (which lost nuance or justification) and the orphan (which lost context). Step 1 and Step 2b both had clear guidance on WHEN to split and no guidance on when NOT to split.
