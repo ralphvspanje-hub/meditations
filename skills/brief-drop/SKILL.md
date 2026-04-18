@@ -63,6 +63,16 @@ Read the content verbatim. Identify:
 
 Preserve the user's phrasing exactly. Do not rewrite, summarize, or clean up.
 
+**Enumerated-list rule.** When the source dump contains a numbered or bulleted list, every item in that list becomes a candidate atom. Do not collapse an item into an earlier atom on grounds of adjacency, thematic overlap, or surface similarity. An item from an enumerated list is suppressed only when it is a pure word-level paraphrase of an atom already extracted from a different source section — the threshold is strict. Items that restate a claim with new framing, new examples, or a different mechanism are distinct claims and get their own atom. The user or the speaker chose to enumerate the items separately; that choice is a signal that the items are claim-level-distinct, even when they share vocabulary with earlier material.
+
+**Section-grouping pass.** Build a map of source-dump section → candidate atoms. Sections are identified by any of the following structural signals:
+
+- A numbered or bulleted list header (e.g. "3 patterns of people that join unicorns:", "Traits of successful startups:").
+- An explicit topic sentence or heading ("A vision on the future of pm:", "His advice is, unless you are building an enterprise company...", "What is a sign for a good AI idea/startup:").
+- A run of 2+ sentences on one topic before a clear topic shift in the dump prose.
+
+For each identified section, record (section label, primary theme tag(s) implied by the section's heading or opening sentence, list of candidate atoms originating from that section). Hold the map alongside the candidate atoms list as a visible artifact — it drives the sibling-tag-parallelism check in Step 2. Sections with only one candidate atom can be skipped (no siblings, no parallelism to check). Sections with 2+ siblings are the targets.
+
 **Brief-level provenance detection.** Assess the dump as a whole. Default is `provenance: lived` — most briefs are the user narrating their own day, week, or event in their own voice. Flag the whole brief as a non-default-provenance candidate only when the narrative overall is an external import (for example, a long quote from a podcast episode pasted as a brief with `brief:`). In practice this is rare.
 
 **Per-atom cue detection.** For each candidate atom, scan the quote-lifted span for all three cues from observation-drop Step 1:
@@ -81,6 +91,10 @@ When all three hold on a specific atom candidate, mark it as a mixed-provenance 
 - After writing, the Step 8 acknowledgement must include a diff line when fixes were applied at the brief level or across atoms: `Fixed N typos in brief, M across atoms.` If zero, omit.
 
 ### Step 2 — Propose title and atoms in one shot
+
+**Sibling-tag-parallelism check (runs before the proposal is presented).** For each source-section with 2+ candidate atoms from the section-grouping pass in Step 1, identify the section's primary theme tag(s) — usually derivable from the section's heading or opening sentence (e.g. "Traits of successful startups:" implies `startups`; "3 patterns of people that join unicorns:" implies `investing` alongside `founders`; "unless you are building an enterprise company, don't talk to your customers" implies `customer-development`; "A vision on the future of pm:" implies `future-of-work` alongside `pm`). Verify that every sibling atom in the section carries at least one of the section's theme tags. If a sibling is missing a theme tag its peers carry, add it before assembling the proposal. The fix happens silently during pre-proposal assembly — the user sees the already-consistent tags in the proposal, not the drift-then-correction. Only flag to the user if the check surfaces ambiguity about which tag is the section's actual theme (rare; usually the heading answers it).
+
+This check does not rewrite each atom's local tags — it only ensures the parent-section tag is present. Local tags (specific to the atom's own claim) stay untouched. Compile's clustering benefits from the parallel theme tag without losing per-atom specificity.
 
 Present in chat as a single message:
 
@@ -250,3 +264,5 @@ Append to CHANGELOG.md if:
 - Single-entity brief Mentions noise: if a brief and all its atoms name the same single entity, the Mentions section on that entity becomes a flat list of (1 brief + N atoms) all pointing to the same place. Watch whether this feels noisy after 3+ single-entity briefs. If yes, consider nested-list formatting (brief as parent bullet, atoms as indented children) rather than dropping atom mentions. Do not change behavior on one data point.
 - If override prompts from Step 2 fire but the user consistently declines them, the per-atom cue detection is over-firing. Narrow the cues or raise the threshold. One decline is not enough; watch for a pattern across 3+ briefs before touching the cue list.
 - If the user pushes back on a typo fix (says "that was intentional" or "put it back"), log it in CHANGELOG.md. Three pushbacks across different briefs means the rules are too loose — tighten.
+- If the user finds a sibling-tag gap that the Step 2 sibling-tag-parallelism check did not catch, log the edge case in CHANGELOG.md. The check relies on section heading or opening sentence to derive the theme tag; if the section is inferred from prose cadence rather than an explicit heading, the theme tag may be ambiguous. Three misses across different briefs means the section-identification heuristics in Step 1 are too narrow and should be widened.
+- If the user finds a missing atom from an enumerated list that Step 1's enumerated-list rule should have caught, log the edge case in CHANGELOG.md. The rule assumes every enumerated item is a distinct claim unless pure word-level paraphrase; if a list contains a true duplicate that should have collapsed and the rule forced an atom anyway, the "pure paraphrase" threshold may be too tight. Three misses across different briefs means the paraphrase threshold needs reexamination.
