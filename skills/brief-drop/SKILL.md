@@ -131,6 +131,61 @@ This is a one-shot approval. Do not conduct a long back-and-forth. Wiki-ingest d
 
 **Verbatim rule:** every atom quote is a direct lift from the dump. If a proposed atom is a paraphrase, re-propose with a real quote-lift instead. Atoms preserve voice.
 
+### Step 2b — Reviewer subagent pass
+
+Between Step 2's draft assembly and the proposal presentation to the user, dispatch an independent reviewer subagent. The subagent exists to break the single-pass self-review bias: the same Marcus instance that identifies sections and picks theme tags cannot reliably catch its own segmentation or theme-selection errors. Prescriptive rules from Step 1 and Step 2 catch the mechanical cases; the subagent catches the judgment-call cases where segmentation or theme selection is genuinely ambiguous. Both layers run; they fail on different axes.
+
+**Dispatch.** Use the Agent tool (Claude Code) or the equivalent subagent-dispatch mechanism in non-Claude-Code environments. If no subagent dispatch is available, skip this step — the prescriptive rules carry the load and the user's approval step catches residual drift. Self-containment (BYOAI) is preserved: the subagent is an optimization, not a dependency.
+
+**Prompt the subagent with exactly three things.**
+
+1. The raw source dump, verbatim.
+2. Marcus's draft proposal: title, brief provenance and source_ref, the section-grouping map from Step 1, and every atom with its title, verbatim quote, and tags.
+3. The four review criteria below. No other instructions, no free-form "improve the proposal" framing.
+
+**Four review criteria.**
+
+- **Missed atoms.** Does the dump contain a claim the draft does not extract? Focus on enumerated lists (numbered or bulleted items) and explicitly numbered sub-points inside paragraphs. Each such item is a distinct claim unless it is a pure word-level paraphrase of an already-extracted atom. Flag misses by quoting the span from the dump and proposing a title and tags.
+- **Section-segmentation drift.** Is any atom assigned to a section that does not match the claim's actual place in the dump's argument arc? A foundational-insight claim that sits inside a larger thesis is part of that section, not a new one. Flag by naming the atom and the section it should sit in.
+- **Sibling-tag parallelism.** For each section with 2+ atoms, identify every primary theme tag implied by the section's heading or opening sentence — not a single theme tag, but the full set. A section titled "A vision on the future of pm" implies at least `pm` and `future-of-work`; if the section is framed around AI's effect on PM, `ai` is also a theme tag. Every sibling atom must carry at least one of the section's theme tags, and ideally all that apply to the atom's claim. Flag any sibling missing a theme tag its peers carry.
+- **Entity drift.** Is the draft proposing an entity stub for a person or company that is illustrative rather than interactive? Podcast speakers, authors cited for color, illustrative company examples, are reference-origin at best and usually do not warrant a stub. Flag any such entity so Marcus can drop it before presenting.
+
+**Required subagent output format.** A structured delta, nothing else. Free-form prose, alternative segmentation narratives, or generic improvement suggestions are out of scope and must be ignored on return.
+
+```
+ATOMS TO ADD:
+- Title: [...]
+  Quote: "[verbatim from dump]"
+  Tags: [...]
+  Source section: [...]
+
+TAGS TO ADD:
+- Atom [title or index]: add [tag1, tag2]
+  Reason: peer atoms in section "[section label]" carry this tag
+
+ENTITIES TO DROP:
+- [entity-slug] — reason: [illustrative reference / podcast speaker / etc.]
+
+SEGMENTATION FIXES:
+- Atom [title or index]: move from section "[wrong]" to section "[right]"
+  Reason: [one sentence]
+
+If a criterion has no findings, output that criterion heading followed by "none".
+```
+
+**Merge behavior.** Marcus applies the delta mechanically:
+
+- Atoms to add: insert them into the atom list with the proposed title, quote, and tags. Re-run the Step 2 sibling-tag-parallelism check on the expanded list.
+- Tags to add: append the named tags to the named atoms. No removal or reordering.
+- Entities to drop: remove them from the brief's `entities:` list and skip any stub creation for them.
+- Segmentation fixes: update the section-grouping map, then re-run the Step 2 sibling-tag-parallelism check using the new map.
+
+**Delta size gate.** If the merged delta adds 5+ atoms or changes tags on more than 30% of atoms, Marcus does not merge silently. Instead, present the delta to the user before applying, prefixed: "Reviewer flagged [N] changes; large enough to surface before merging. Approve, edit, or reject." This avoids silent wholesale rewrites.
+
+**Conflict resolution.** If the subagent's delta contradicts the prescriptive rules from Step 1 or Step 2 (e.g. proposes collapsing two enumerated-list items into one atom), the prescriptive rule wins and the conflicting delta item is dropped. Log the conflict in CHANGELOG.md so the rule or the subagent prompt can be refined.
+
+**Single-turn budget.** Dispatch once per brief. No iterative refinement with the subagent — if its delta is obviously broken, Marcus drops the step and proceeds on the Step 1/2 draft alone. Iteration bloat is a failure mode worse than occasional misses.
+
 ### Step 3 — Write the brief file
 
 Create `wiki/briefs/YYYY-MM-DD-[slug].md`:
@@ -264,5 +319,7 @@ Append to CHANGELOG.md if:
 - Single-entity brief Mentions noise: if a brief and all its atoms name the same single entity, the Mentions section on that entity becomes a flat list of (1 brief + N atoms) all pointing to the same place. Watch whether this feels noisy after 3+ single-entity briefs. If yes, consider nested-list formatting (brief as parent bullet, atoms as indented children) rather than dropping atom mentions. Do not change behavior on one data point.
 - If override prompts from Step 2 fire but the user consistently declines them, the per-atom cue detection is over-firing. Narrow the cues or raise the threshold. One decline is not enough; watch for a pattern across 3+ briefs before touching the cue list.
 - If the user pushes back on a typo fix (says "that was intentional" or "put it back"), log it in CHANGELOG.md. Three pushbacks across different briefs means the rules are too loose — tighten.
-- If the user finds a sibling-tag gap that the Step 2 sibling-tag-parallelism check did not catch, log the edge case in CHANGELOG.md. The check relies on section heading or opening sentence to derive the theme tag; if the section is inferred from prose cadence rather than an explicit heading, the theme tag may be ambiguous. Three misses across different briefs means the section-identification heuristics in Step 1 are too narrow and should be widened.
-- If the user finds a missing atom from an enumerated list that Step 1's enumerated-list rule should have caught, log the edge case in CHANGELOG.md. The rule assumes every enumerated item is a distinct claim unless pure word-level paraphrase; if a list contains a true duplicate that should have collapsed and the rule forced an atom anyway, the "pure paraphrase" threshold may be too tight. Three misses across different briefs means the paraphrase threshold needs reexamination.
+- If the user finds a sibling-tag gap that both the Step 2 sibling-tag-parallelism check and the Step 2b reviewer subagent missed, log the edge case in CHANGELOG.md. A double miss on the same axis means the subagent prompt needs tightening on that criterion — the prescriptive rule alone is not the failure point.
+- If the user finds a missing atom that both Step 1's enumerated-list rule and the Step 2b subagent missed, log the edge case in CHANGELOG.md. Same reasoning: double miss means the subagent's missed-atoms criterion needs sharpening.
+- If the Step 2b subagent returns an empty delta but the user then flags real gaps at approval time, log it. The subagent is under-firing and its prompt should be examined.
+- If the Step 2b subagent returns a delta so large it trips the 5-atoms-or-30%-tags gate on 3+ briefs, the subagent is over-firing. The review criteria may be too permissive and should be narrowed.
