@@ -50,6 +50,34 @@ Send any message. On first run Marcus notices `wiki/entities/me.md` is missing a
 
 For Obsidian graph colors, open the vault in Obsidian and follow [docs/obsidian-graph-colors.md](docs/obsidian-graph-colors.md). Two minutes.
 
+### Setup walkthroughs
+
+Prefer a guided conversation over reading docs? Paste one of these into a fresh Claude Code session opened in the Meditations folder. A walkthrough agent will ask what you have in place and take you step by step.
+
+**Set up Cursor or VS Code as your daily driver:**
+
+````
+Follow @docs/SETUP.md. I want to set up the Claude Code extension in Cursor or VS Code as my main way to use Marcus. Walk me through it.
+````
+
+**Set up a daily observation push to your phone:**
+
+````
+Follow @docs/SETUP.md. I want to set up the daily-observation routine so I get a random old observation pushed to my phone once a day. Walk me through what I need.
+````
+
+**Set up Claude Channels for full phone access:**
+
+````
+Follow @docs/SETUP.md. I want to set up Claude Channels so I can use Marcus from Telegram. Walk me through what I need, including whether I actually have the always-on machine this needs.
+````
+
+**Set up Obsidian graph colors:**
+
+````
+Follow @docs/SETUP.md. Walk me through setting up the Obsidian graph view colors.
+````
+
 ### Capturing via Cursor or VS Code
 
 If you do most of your work in an IDE, the Claude Code extension turns the Cursor or VS Code chat panel into a Marcus session tied to your Meditations folder. All eight operations work. This is the recommended default for anyone without a 24/7 machine. The install steps and the fresh-window discipline are in [docs/cursor-setup.md](docs/cursor-setup.md).
@@ -57,8 +85,6 @@ If you do most of your work in an IDE, the Claude Code extension turns the Curso
 ### Running it from your phone
 
 Marcus can run from Telegram, Discord, or iMessage via Claude Channels, and can push scheduled observations via Claude routines. Both depend on claude.ai login and some setup the repo does not ship. The honest version of the stack, including a reference coordinator agent to copy, is in [docs/phone-setup.md](docs/phone-setup.md).
-
-Both docs above start with a one-line "How to use this doc" pointer: open a fresh Claude Code session, type `Follow @docs/COACH.md`, and paste the doc as the first message. Coach is the planning-partner agent that ships with Meditations and will walk you through the install and setup. The routines app itself lives at [claude.ai/code/routines](https://claude.ai/code/routines) — worth bookmarking, it is not linked from the main claude.ai nav.
 
 ---
 
@@ -124,15 +150,21 @@ Not everything has to be about work. Personal heuristics compound the same way.
 - `raw/`: immutable source files you drop in. Marcus reads but never modifies.
 - `wiki/`: everything Marcus writes. `sources/` for ingest summaries, `observations/`, `concepts/`, `entities/`, `briefs/`, `queries/`, plus `INDEX.md` and `log.md`.
 - `skills/`: the nine skill files Marcus follows (eight operations + onboarding).
-- `docs/`: `COACH.md` (the planning-partner agent) and `obsidian-graph-colors.md`.
+- `docs/`: `COACH.md` (the planning-partner agent), `SETUP.md` (the onboarding guide agent), `phone-setup.md`, `cursor-setup.md`, and `obsidian-graph-colors.md`.
 
 Full tree in [AGENTS.md](AGENTS.md) section 5.
 
 ---
 
-## Coach
+## Agents
 
-Meditations ships with a second agent, **Coach**, defined in [docs/COACH.md](docs/COACH.md). Coach is a planning partner: long conversation, stress-test your ideas, hand you an execution prompt. Marcus executes, Coach plans. Load COACH.md in a separate session when you want to think about what Meditations should do next instead of running Marcus in reactive mode.
+Meditations ships with three agents, each with one job.
+
+- **Marcus** maintains the wiki day to day: captures observations, compiles patterns, answers queries, lints for broken links. [AGENTS.md](AGENTS.md) is the schema. This is the agent you run when you already have the repo set up and you want to use it.
+- **Setup** walks a new user through one setup path (Cursor or VS Code extension, daily-observation routine, Claude Channels, Obsidian graph colors) and stops. [docs/SETUP.md](docs/SETUP.md) is the spec. The paste-in prompts under Install load it.
+- **Coach** is a planning partner for changes to Meditations itself: long conversation, stress-test your ideas, hand you an execution prompt a fresh session can run. [docs/COACH.md](docs/COACH.md) is the spec. Load it in a separate session when you want to evolve the project rather than just run it.
+
+Marcus executes, Setup onboards, Coach plans. One agent per session, no blending roles.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Canonical documentation of the four-color palette Meditations uses in Obsidian's graph view.
 
-`.obsidian/graph.json` is not tracked in git because Obsidian rewrites it on every graph view interaction (zoom, pan, format drift). Color groups are durable config; view state is volatile. Rather than track a noisy file, the color scheme lives here as plain-text documentation that any agent can read without Obsidian running, following Farzapedia's Explicit principle.
+`.obsidian/graph.json` is not tracked in git because Obsidian rewrites it on every graph view interaction (zoom, pan, format drift). Color groups are durable config; view state is volatile. Rather than track a noisy file, the color scheme lives here as plain-text documentation that any agent can read without Obsidian running.
 
 ## The palette
 

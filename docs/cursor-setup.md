@@ -4,7 +4,7 @@ This file covers the recommended way to run Marcus if you work primarily in Curs
 
 ## How to use this doc
 
-The easiest way to follow this is to open a fresh Claude Code session, type `Follow @docs/COACH.md`, and then paste the rest of this file as the first message. Coach is the planning-partner agent that ships with Meditations. It will walk you through the install and the discipline below.
+The easiest way to follow this is to open a fresh Claude Code session in the Meditations folder, type `Follow @docs/SETUP.md`, and say you want to set up the Cursor or VS Code extension. The setup guide agent will walk you through the install and the fresh-window discipline one step at a time. The README has a ready-to-paste prompt.
 
 ## Primary sources
 
@@ -24,7 +24,7 @@ The difference versus running `claude` in a terminal is cosmetic but load-bearin
 
 Claude Channels from a phone require the laptop to stay on: if the session is not running when a message arrives, the message is not delivered. Claude routines require github sync discipline on both sides. Both are legitimate paths and both are covered in [phone-setup.md](phone-setup.md). Both also have costs.
 
-Cursor or VS Code with the extension has almost none of them. No bot, no tokens, no cloud clone, no always-on laptop, no pull-before-work ritual. You capture when you are at the machine; when you are not, the phone path fills the gap — Channels if your laptop happens to be on, routines for scheduled fires, API-triggered routines for one-shot captures. For most users this is the right default.
+Cursor or VS Code with the extension has almost none of them. No bot, no tokens, no cloud clone, no always-on laptop, no pull-before-work ritual. You capture when you are at the machine; when you are not, scheduled routines fill the gap — a daily push of an old observation, a Sunday reflection prompt, scheduled lint runs. Channels can also reach a session from a phone, but only if you have an always-on machine (Mac Mini, home server, VPS, or a laptop that literally never closes — a restart for a system update breaks the pairing). For most users, Cursor plus scheduled routines is the right default.
 
 ## Install the extension
 
@@ -64,9 +64,7 @@ The author of the repo started on the terminal path: `claude` in a shell inside 
 
 The switch was to Cursor as the daily driver for everything substantive: `brief:`, `save:`, `ingest:`, `compile`, `teach-back`, `lint`. Visible feedback — file tree, diff, graph — is why this path wins on the laptop. New chat per capture; the occasional longer planning session with Coach.
 
-Kept from the phone-setup path: API-triggered routines, but only for `save:` and a light `wiki:`. Those are the two operations that benefit from being fast and away from keyboard. An iOS Shortcut dictates an observation, POSTs it to the routine's endpoint, the routine writes the file in the cloud clone and pushes to github. No laptop required for the quick capture.
-
-The combination — Cursor as primary for real work, API-triggered routines for one-shot phone capture — replaces the always-on-laptop plus Channels setup. The tradeoff is that you cannot `brief:` or `compile` from your phone. That is comfortable: brief deserves attention on the laptop anyway, and compile should be deliberate.
+One bespoke addition the same author runs separately: a custom API-triggered routine wired to an iOS Shortcut for one-shot `save:` captures from a phone. Routines expose an HTTP endpoint per routine, so a Shortcut can POST a line of dictated text and the routine writes the observation file in the cloud clone and pushes to github. The wiring (auth tokens, payload plumbing, Shortcut round-trip) is finicky enough that the repo does not ship a worked example — this is one author's customization, not a turnkey option a new reader should try to replicate. The one-paragraph pointer in [phone-setup.md](phone-setup.md) is all the repo says about it. The tradeoff on the no-always-on-laptop setup is that `brief:` and `compile` stay on the laptop, which is fine: brief deserves attention and compile should be deliberate.
 
 Other setups are equally valid. Channels-always-on works great for anyone with a Mac Mini or a spare machine. Routines-only works for users who rarely sit at a laptop. Pick the shape that fits the way you already work.
 
