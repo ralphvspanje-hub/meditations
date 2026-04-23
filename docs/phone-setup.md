@@ -125,6 +125,25 @@ This is one shape that works, not the only shape. Some people prefer to put the 
 - The Meditations repo on github, accessible to the routine.
 - Setup happens in the claude.ai UI, not from your terminal.
 
+### Prerequisites for routines
+
+Before any routine can run, you need three things in place:
+
+**1. Your own GitHub repo with the Meditations structure.** The routine runs on a cloud clone of a GitHub repo. Not your local folder. Fork this repo to your own GitHub (public or private — either works), or push your working local copy to a new GitHub repo. Your observations must be pushed to that remote for the routine to see them. If the repo is private, the routine's GitHub connector needs access.
+
+**2. A claude.ai environment with the right connectors and env vars.** An environment is a named cloud sandbox you configure once and reuse across routines. For a Telegram daily push you need:
+
+- GitHub connector pointed at your repo.
+- Telegram connector (bot token).
+- Env vars: `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+- Network access enabled.
+
+Typically you name this environment something like `marcus-cloud` and point every Marcus routine at it. The claude.ai UI is the source of truth for creating environments and connectors; this doc does not walk through the clicks because the UI changes.
+
+**3. Repo-name awareness.** The bootstrap template's probe loop hardcodes the repo name (see `<repo-name>` in [../routines/bootstrap.md](../routines/bootstrap.md)). If you forked and kept the name `meditations`, no change needed. If you renamed your fork to `my-wiki`, edit `<repo-name>` to `my-wiki` in every routine's bootstrap before pasting.
+
+Once those three are in place, writing a specific routine (see the subsection below for the pattern, and [../routines/random-observation.md](../routines/random-observation.md) for the working example) is a 5-minute job: paste the bootstrap with placeholders filled in, set a schedule, save.
+
 **What it is good for, with concrete examples:**
 
 - A daily old-observation push: pick something the user saved 90 days ago and ask "still true?"
@@ -152,13 +171,9 @@ Configure routines at [claude.ai/code/routines](https://claude.ai/code/routines)
 
 **The bootstrap-plus-file split.** The prompt you paste into claude.ai's routine config is a short bootstrap: it locates the repo on the cloud clone and points at an instructions file in the repo (e.g. `routines/random-observation.md`). The full instructions — the bash script, the guardrails, the design notes — live in that repo file. This keeps the UI config minimal and the logic versioned alongside the code. When you change the routine's behavior, you edit the markdown file and commit; the routine picks up the new instructions on its next run.
 
-**The double-nested path gotcha.** Claude Code on the web clones each repo into a directory of the same name. Depending on the environment layout you may get `/home/user/meditations/` or `/home/user/meditations/meditations/`. Hardcoding one of them breaks the routine on the day the other shape shows up. The fix is a probe loop the bootstrap runs first:
+**The double-nested path gotcha.** Claude Code on the web clones each repo into a directory of the same name. Depending on the environment layout you may get `/home/user/meditations/` or `/home/user/meditations/meditations/`. Hardcoding one of them breaks the routine on the day the other shape shows up.
 
-```
-for p in /home/user/meditations/meditations /home/user/meditations; do
-  if [ -f "$p/routines/random-observation.md" ]; then cd "$p"; break; fi
-done
-```
+The probe-loop pattern and the full bootstrap template live in [../routines/bootstrap.md](../routines/bootstrap.md). Copy the template, fill the four placeholders, paste into a new routine at [claude.ai/code/routines](https://claude.ai/code/routines).
 
 **Environments and connectors.** An environment in claude.ai is a named cloud sandbox that bundles connectors (GitHub for the repo, Telegram or another messenger for the DM) and env vars (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`). You set it up once — typically named something like `marcus-cloud` — and reuse it across routines. Without the right connectors attached, the routine will try to curl Telegram and fail on network or auth. This doc does not walk through the claude.ai UI for environments because the UI changes; the routines announcement is the source of truth.
 

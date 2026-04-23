@@ -4,32 +4,7 @@
 
 Runs daily at a scheduled time, picks one observation at random from `wiki/observations/`, formats it with a relative age phrase and a small decorative prefix, and DMs it via Telegram. Read-only on the repo. No writes, no commits, no push. If the push fails, the routine logs and exits non-zero; it does not retry and does not escalate to github.
 
-## Routine prompt
-
-Paste this prompt into a new routine at [claude.ai/code/routines](https://claude.ai/code/routines).
-
-````
-Running in the cloud at 08:00 Europe/Amsterdam. Follow routines/random-observation.md in the Meditations repo exactly and run to completion.
-
-=== FIRST: find the repo root ===
-
-The cloud clone path varies (sometimes /home/user/meditations/, sometimes /home/user/meditations/meditations/). Locate it dynamically:
-
-for p in /home/user/meditations/meditations /home/user/meditations; do
-  if [ -f "$p/routines/random-observation.md" ]; then cd "$p"; break; fi
-done
-ls routines/random-observation.md   # must succeed
-
-If both fail, log a message and exit 1 — do not retry, do not commit anything.
-
-=== Cloud-specific notes ===
-
-- The Meditations repo is READ-ONLY. Never edit, commit, or push.
-- No human is watching. Run autonomously. Never prompt for approval, never wait for input.
-- Exit 0 on success, exit 1 on failure (after logging the failure).
-````
-
-Substitute `Europe/Amsterdam` and `08:00` with your own time zone and schedule. The repo name in the paths (`meditations`) must match the repo you point the routine at — if you renamed your fork, update both path strings.
+The bootstrap prompt that goes into the claude.ai routine UI is generated from the template in [bootstrap.md](bootstrap.md). For this routine the filled-in example at the bottom of that file is what you paste — adjust only `<repo-name>` if you forked and renamed, and `<schedule>` if you want a different time.
 
 ## Routine config
 

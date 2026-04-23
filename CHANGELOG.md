@@ -1,5 +1,13 @@
 # Marcus Changelog
 
+## 2026-04-23 — reusable bootstrap template, prerequisites subsection, single source of truth
+
+**What happened:** the routine-bootstrap text was duplicated between the claude.ai routine UI and `routines/random-observation.md`, creating two sources of truth that would drift. This pass promotes the bootstrap to a reusable template at `routines/bootstrap.md` with placeholders (`<schedule>`, `<routine-filename>`, `<repo-name>`, `<read-only-or-write>`) plus one filled-in example. `routines/random-observation.md` loses its duplicate prompt block and just points at the template. `docs/phone-setup.md` gains a new "Prerequisites for routines" subsection that spells out the three things a new reader needs in place before any routine works (their own GitHub repo, a claude.ai environment with the right connectors and env vars, repo-name awareness for the probe-loop paths) and its inline probe-loop snippet is replaced by a pointer to the template. Three changes together close the "works in principle, not in practice" gap that blocked plug-and-play.
+
+**Changed:** created `routines/bootstrap.md`; slimmed `routines/random-observation.md`; updated `routines/README.md`; expanded `docs/phone-setup.md`.
+
+**File:** `routines/bootstrap.md`, `routines/random-observation.md`, `routines/README.md`, `docs/phone-setup.md`, `CHANGELOG.md`.
+
 ## 2026-04-23 — concrete routine example and pattern subsection
 
 **What happened:** phone-setup.md previously told readers routines were an option but left them to reverse-engineer the prompt shape, the cloud clone path gotcha, the environment setup, and the script mechanics. This pass ships a complete working example at `routines/random-observation.md` (daily push: pick a random observation, format it with a relative age phrase and a decorative icon, DM via Telegram; read-only on the repo, send-only on the messenger) and adds a "Writing a routine — the pattern" subsection to phone-setup.md covering the bootstrap-plus-file split, the double-nested-path gotcha, what a claude.ai environment is, and the read-only-versus-write distinction. One zoomed-out screenshot of the routine edit UI is embedded. The app URL at claude.ai/code/routines (which is not linked from the main nav) is surfaced in three places — phone-setup.md primary-sources, the pattern subsection, and the README — so readers do not have to hunt for it. README gains a one-line Coach-walkthrough pointer after the phone subsection.
