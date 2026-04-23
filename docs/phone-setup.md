@@ -14,11 +14,11 @@ The easiest way to follow this is to open a fresh Claude Code session in the Med
 
 These are the source of truth. Anything in this file that contradicts them is wrong; trust the links.
 
-## Pick your path
+## Two capabilities
 
-Two real paths. Pick the one whose "what it needs" column you actually have.
+Two different directions, not two roads to the same place. Routines push **to** your phone on a schedule (cloud → phone, fire-and-forget, no laptop needed). Channels lets you reach **from** your phone into a Marcus session running on an always-on machine (phone → laptop, full interactive capture). Run either alone if only one set of prerequisites is in place, or run them together once both are.
 
-| Path | What it does | What it needs | Good for |
+| Capability | What it does | What it needs | Good for |
 |---|---|---|---|
 | Scheduled pushes (Claude routines) | A cron-scheduled job on Anthropic infra that fires against a GitHub clone of your repo | Your own GitHub repo, a claude.ai paid plan, a messenger connector | Daily "still true?" pings from old observations, Sunday weekly-reflection prompts, scheduled wiki-lint runs |
 | Interactive capture (Claude Channels) | A running Claude Code session on your machine receives inbound Telegram / Discord / iMessage events and processes them | An always-on machine (Mac Mini, home server, VPS, or a laptop that literally never closes), claude.ai login, Claude Code v2.1.80+, Bun, a bot token | Full save, brief, wiki, compile from your phone |
@@ -193,7 +193,7 @@ This is one shape that works, not the only shape. Some people prefer to put the 
 
 ## The two combined
 
-Routines for scheduled pushes back to your phone. Channels for interactive capture from your phone, when you have a machine that stays on. Run either path on its own, or run them together when both earn their keep. Neither one alone, and neither combined, turns this into a phone-first product — it is a wiki that lives on disk, with two honest ways to reach into it from elsewhere.
+Routines for scheduled pushes back to your phone. Channels for interactive capture from your phone, when you have a machine that stays on. These do different things, so they complement rather than substitute — run whichever one has its prerequisites in place now, and add the other when the remaining ones land. Neither one alone, and neither combined, turns this into a phone-first product — it is a wiki that lives on disk, with two honest ways to reach into it from elsewhere.
 
 This rests on three things you should know going in: a claude.ai paid tier, a messenger of your choice with a working bot, and — for Channels — a machine that actually stays on. None of the harness code lives in this repo. This is one author's working setup; it is not a product, and it is not a standard. Wire it together if it fits the way you work; ignore it if it does not.
 

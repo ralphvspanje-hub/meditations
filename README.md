@@ -50,11 +50,17 @@ Send any message. On first run Marcus notices `wiki/entities/me.md` is missing a
 
 For Obsidian graph colors, open the vault in Obsidian and follow [docs/obsidian-graph-colors.md](docs/obsidian-graph-colors.md). Two minutes.
 
+### Capturing via Cursor or VS Code
+
+If you do most of your work in an IDE, the Claude Code extension turns the Cursor or VS Code chat panel into a Marcus session tied to your Meditations folder. All eight operations work. This is the recommended default for anyone without a 24/7 machine. The install steps and the fresh-window discipline are in [docs/cursor-setup.md](docs/cursor-setup.md). This is also where you run the setup walkthroughs below — paste any of those prompts into a fresh Claude Code chat panel in Cursor or VS Code and the walkthrough agent takes it from there.
+
 ### Setup walkthroughs
 
 Prefer a guided conversation over reading docs? Paste one of these into a fresh Claude Code session opened in the Meditations folder. A walkthrough agent will ask what you have in place and take you step by step.
 
 **Set up Cursor or VS Code as your daily driver:**
+
+The recommended default when you are at a laptop: the IDE chat panel becomes a full Marcus session with file tree, diffs, and graph view visible while you capture and query.
 
 ````
 Follow @docs/SETUP.md. I want to set up the Claude Code extension in Cursor or VS Code as my main way to use Marcus. Walk me through it.
@@ -62,11 +68,15 @@ Follow @docs/SETUP.md. I want to set up the Claude Code extension in Cursor or V
 
 **Set up a daily observation push to your phone:**
 
+Cloud to phone. A scheduled job fires once a day, picks a random old observation, and DMs it to you. No laptop needs to be on. Fire-and-forget.
+
 ````
 Follow @docs/SETUP.md. I want to set up the daily-observation routine so I get a random old observation pushed to my phone once a day. Walk me through what I need.
 ````
 
 **Set up Claude Channels for full phone access:**
+
+Phone to laptop. Any message you text your bot lands as a Marcus event, so `save:`, `brief:`, `wiki:`, `compile` all work from anywhere — as long as your laptop (or a dedicated always-on machine) stays on to receive the messages.
 
 ````
 Follow @docs/SETUP.md. I want to set up Claude Channels so I can use Marcus from Telegram. Walk me through what I need, including whether I actually have the always-on machine this needs.
@@ -74,17 +84,13 @@ Follow @docs/SETUP.md. I want to set up Claude Channels so I can use Marcus from
 
 **Set up Obsidian graph colors:**
 
+Visual polish for the graph view. Four colors so observations, concepts, briefs, and entities render distinctly. Two minutes.
+
 ````
 Follow @docs/SETUP.md. Walk me through setting up the Obsidian graph view colors.
 ````
 
-### Capturing via Cursor or VS Code
-
-If you do most of your work in an IDE, the Claude Code extension turns the Cursor or VS Code chat panel into a Marcus session tied to your Meditations folder. All eight operations work. This is the recommended default for anyone without a 24/7 machine. The install steps and the fresh-window discipline are in [docs/cursor-setup.md](docs/cursor-setup.md).
-
-### Running it from your phone
-
-Marcus can run from Telegram, Discord, or iMessage via Claude Channels, and can push scheduled observations via Claude routines. Both depend on claude.ai login and some setup the repo does not ship. The honest version of the stack, including a reference coordinator agent to copy, is in [docs/phone-setup.md](docs/phone-setup.md).
+The two phone options are different directions, not competing paths. Run either alone, or both together once the prerequisites land.
 
 ---
 
