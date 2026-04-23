@@ -139,11 +139,11 @@ Routines also accept HTTP POST triggers on a unique endpoint protected by an aut
 
 This path is good for `save:` specifically, since `save:` is one-shot and the only thing the user needs back is a confirmation. A simple `wiki:` question can also work where the HTTP response body is enough — the reply lands back in the Shortcut app as the POST response, not as a separate chat message. It is still not good for `brief:`, `ingest:`, `compile`, or `teach-back`: those all need back-and-forth approvals that do not fit a one-shot POST.
 
-Github sync is still load-bearing here. The routine writes in the cloud clone and must push; your desk pulls before any new local capture and pushes after. Same discipline the scheduled-routines paragraph below spells out — skip the pull and you overwrite the routine's work with stale local state.
+The github-sync discipline in the paragraph below applies to this path exactly as it does to scheduled routines. The routine still writes to a cloud clone and must push; your desk must still pull before capturing locally.
 
 One concrete example shape: an iOS Shortcut titled "Marcus save" that takes dictated text as input, POSTs it with the auth token to the routine's endpoint, and shows the routine's response. The routines announcement linked above is the source of truth for endpoint setup and auth-token handling.
 
-See [cursor-setup.md](cursor-setup.md) Section 5 for one working setup that pairs API-triggered routines for quick phone capture with Cursor as the daily driver for everything else.
+See the "How one author actually uses this" section in [cursor-setup.md](cursor-setup.md) for one working setup that pairs API-triggered routines for quick phone capture with Cursor as the daily driver for everything else.
 
 **Github sync is load-bearing for this path.** The routine runs on a cloud clone of the repo, not on your laptop. So:
 
