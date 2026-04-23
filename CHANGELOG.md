@@ -1,5 +1,13 @@
 # Marcus Changelog
 
+## 2026-04-23 — phone-setup doc, replace handwave in README
+
+**What happened:** README's `Running it from your phone` paragraph claimed "any harness that can call Claude on a schedule works" and pointed at no specific infrastructure. That handwave let readers infer plug-and-play when phone access actually requires two distinct pieces of Anthropic infrastructure — Claude Channels for interactive capture into a running local session, and Claude routines for scheduled cloud-side pushes — each with different constraints (claude.ai login, Claude Code v2.1.80+, Bun, github sync as load-bearing for the routines path, the laptop staying on for the channels path). The new doc names both pieces honestly, links the primary sources, and ships a reference coordinator-subagent agent definition so a reader can copy the working shape without reverse-engineering it. The README now points at the doc instead of handwaving.
+
+**Changed:** created `docs/phone-setup.md`, rewrote README's `Running it from your phone` subsection to point at the new doc.
+
+**File:** `docs/phone-setup.md`, `README.md`, `CHANGELOG.md`.
+
 ## 2026-04-18 — brief-drop: testable-heuristic refactor (replaces the rule pile)
 
 **What happened:** Iterating on brief-drop through the day accumulated several prescriptive rules (enumerated-list rule, atom integrity rule, continuation-arc merge rule, section-grouping pass, sibling-tag-parallelism check, Step 2b subagent) to stabilize atom-boundary decisions. Each new rule competed with earlier rules and got applied inconsistently across runs; the same failure shapes (enumerated sub-lists collapsed into a parent atom, trailing normative sentences absorbed, rationale clauses over-split) kept recurring. Atom-boundary decisions are semantic judgment; procedural rules have a ceiling for stabilizing that, and LLMs pattern-match against concrete examples more reliably than they follow long rule chains.

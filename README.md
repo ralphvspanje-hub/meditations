@@ -52,7 +52,7 @@ For Obsidian graph colors, open the vault in Obsidian and follow [docs/obsidian-
 
 ### Running it from your phone
 
-You can also use Marcus entirely through a messaging app (Telegram, iMessage relay, anything you can wire up), so `save:` and `wiki:` work from anywhere without keeping a terminal open on a laptop all day. Any harness that can call Claude on a schedule works. The plumbing is outside this repo because it depends on your setup.
+Marcus can run from Telegram, Discord, or iMessage via Claude Channels, and can push scheduled observations via Claude routines. Both depend on claude.ai login and some setup the repo does not ship. The honest version of the stack, including a reference coordinator agent to copy, is in [docs/phone-setup.md](docs/phone-setup.md).
 
 ---
 
