@@ -129,8 +129,21 @@ This is one shape that works, not the only shape. Some people prefer to put the 
 - A daily old-observation push: pick something the user saved 90 days ago and ask "still true?"
 - The Sunday weekly-reflection prompt — fire-and-forget, with the question landing in your phone.
 - Scheduled `wiki-lint` runs that flag broken links or stale frontmatter.
+- A phone-triggered one-shot `save:` fired from an iOS Shortcut: dictate an observation, POST it to the routine's endpoint, the routine files it in the cloud clone and pushes. See the subsection below.
 
-**What it is not good for.** Anything that needs discussion. `save:`, `brief:`, `ingest:`, `compile`, `teach-back`, `wiki:` — those all involve back-and-forth ("which atoms should I extract", "is this pattern real", "do you want me to file this"). A routine cannot ask a follow-up; the session ends when the script ends. Interactive operations belong in the channels path.
+**What it is not good for.** Anything that needs discussion. `brief:`, `ingest:`, `compile`, `teach-back` — those all involve back-and-forth ("which atoms should I extract", "is this pattern real", "do you want me to file this"). A routine cannot ask a follow-up; the session ends when the script ends. Interactive operations belong in the channels path. `save:` and simple `wiki:` are the exceptions, covered in the subsection below.
+
+### API-triggered routines — a one-shot capture path from your phone
+
+Routines also accept HTTP POST triggers on a unique endpoint protected by an auth token. That opens a third path: an iOS Shortcut (or Android equivalent) POSTs a line of dictated text to the endpoint; the routine runs, treats the payload as a `save:`, writes the observation file in the cloud clone, and pushes to github. No laptop required for the capture.
+
+This path is good for `save:` specifically, since `save:` is one-shot and the only thing the user needs back is a confirmation. A simple `wiki:` question can also work where the HTTP response body is enough — the reply lands back in the Shortcut app as the POST response, not as a separate chat message. It is still not good for `brief:`, `ingest:`, `compile`, or `teach-back`: those all need back-and-forth approvals that do not fit a one-shot POST.
+
+Github sync is still load-bearing here. The routine writes in the cloud clone and must push; your desk pulls before any new local capture and pushes after. Same discipline the scheduled-routines paragraph below spells out — skip the pull and you overwrite the routine's work with stale local state.
+
+One concrete example shape: an iOS Shortcut titled "Marcus save" that takes dictated text as input, POSTs it with the auth token to the routine's endpoint, and shows the routine's response. The routines announcement linked above is the source of truth for endpoint setup and auth-token handling.
+
+See [cursor-setup.md](cursor-setup.md) Section 5 for one working setup that pairs API-triggered routines for quick phone capture with Cursor as the daily driver for everything else.
 
 **Github sync is load-bearing for this path.** The routine runs on a cloud clone of the repo, not on your laptop. So:
 

@@ -50,6 +50,10 @@ Send any message. On first run Marcus notices `wiki/entities/me.md` is missing a
 
 For Obsidian graph colors, open the vault in Obsidian and follow [docs/obsidian-graph-colors.md](docs/obsidian-graph-colors.md). Two minutes.
 
+### Capturing via Cursor or VS Code
+
+If you do most of your work in an IDE, the Claude Code extension turns the Cursor or VS Code chat panel into a Marcus session tied to your Meditations folder. All eight operations work. This is the recommended default for anyone without a 24/7 machine. The install steps and the fresh-window discipline are in [docs/cursor-setup.md](docs/cursor-setup.md).
+
 ### Running it from your phone
 
 Marcus can run from Telegram, Discord, or iMessage via Claude Channels, and can push scheduled observations via Claude routines. Both depend on claude.ai login and some setup the repo does not ship. The honest version of the stack, including a reference coordinator agent to copy, is in [docs/phone-setup.md](docs/phone-setup.md).

@@ -1,5 +1,13 @@
 # Marcus Changelog
 
+## 2026-04-23 — cursor-setup doc, API-triggered routines subsection
+
+**What happened:** The repo now explicitly names three real capture paths (Cursor/VS Code extension, Claude Channels from phone, Claude routines for scheduled and API-triggered captures) instead of implicitly assuming terminal-only. The new `docs/cursor-setup.md` names the IDE path as the recommended default for users without a 24/7 machine, explains the fresh-window-per-capture discipline as the manual equivalent of the coordinator-subagent pattern, and closes with a concrete first-person account of how the author pairs Cursor as daily driver with API-triggered routines for phone quick-capture. The `phone-setup.md` routines section gains an API-triggered one-shot-save option so single-claim captures from a phone Shortcut are no longer wrongly in the not-fit bucket, and cross-references the Cursor doc's Section 5 for the working-setup example.
+
+**Changed:** created `docs/cursor-setup.md`, updated `docs/phone-setup.md` with an API-triggered routines subsection, added `Capturing via Cursor or VS Code` subsection to `README.md`.
+
+**File:** `docs/cursor-setup.md`, `docs/phone-setup.md`, `README.md`, `CHANGELOG.md`.
+
 ## 2026-04-23 — phone-setup doc, replace handwave in README
 
 **What happened:** README's `Running it from your phone` paragraph claimed "any harness that can call Claude on a schedule works" and pointed at no specific infrastructure. That handwave let readers infer plug-and-play when phone access actually requires two distinct pieces of Anthropic infrastructure — Claude Channels for interactive capture into a running local session, and Claude routines for scheduled cloud-side pushes — each with different constraints (claude.ai login, Claude Code v2.1.80+, Bun, github sync as load-bearing for the routines path, the laptop staying on for the channels path). The new doc names both pieces honestly, links the primary sources, and ships a reference coordinator-subagent agent definition so a reader can copy the working shape without reverse-engineering it. The README now points at the doc instead of handwaving.
