@@ -10,6 +10,7 @@ The easiest way to follow this is to open a fresh Claude Code session, type `Fol
 
 - [Claude Channels documentation](https://code.claude.com/docs/en/channels)
 - [Claude Code routines announcement](https://claude.com/blog/introducing-routines-in-claude-code)
+- [claude.ai/code/routines](https://claude.ai/code/routines) — where you actually configure routines. Not linked from the main claude.ai nav, worth bookmarking.
 
 These are the source of truth. Anything in this file that contradicts them is wrong; trust the links.
 
@@ -144,6 +145,28 @@ The github-sync discipline in the paragraph below applies to this path exactly a
 One concrete example shape: an iOS Shortcut titled "Marcus save" that takes dictated text as input, POSTs it with the auth token to the routine's endpoint, and shows the routine's response. The routines announcement linked above is the source of truth for endpoint setup and auth-token handling.
 
 See the "How one author actually uses this" section in [cursor-setup.md](cursor-setup.md) for one working setup that pairs API-triggered routines for quick phone capture with Cursor as the daily driver for everything else.
+
+### Writing a routine — the pattern
+
+Configure routines at [claude.ai/code/routines](https://claude.ai/code/routines) — bookmark it, the URL is not linked from the main claude.ai nav.
+
+**The bootstrap-plus-file split.** The prompt you paste into claude.ai's routine config is a short bootstrap: it locates the repo on the cloud clone and points at an instructions file in the repo (e.g. `routines/random-observation.md`). The full instructions — the bash script, the guardrails, the design notes — live in that repo file. This keeps the UI config minimal and the logic versioned alongside the code. When you change the routine's behavior, you edit the markdown file and commit; the routine picks up the new instructions on its next run.
+
+**The double-nested path gotcha.** Claude Code on the web clones each repo into a directory of the same name. Depending on the environment layout you may get `/home/user/meditations/` or `/home/user/meditations/meditations/`. Hardcoding one of them breaks the routine on the day the other shape shows up. The fix is a probe loop the bootstrap runs first:
+
+```
+for p in /home/user/meditations/meditations /home/user/meditations; do
+  if [ -f "$p/routines/random-observation.md" ]; then cd "$p"; break; fi
+done
+```
+
+**Environments and connectors.** An environment in claude.ai is a named cloud sandbox that bundles connectors (GitHub for the repo, Telegram or another messenger for the DM) and env vars (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`). You set it up once — typically named something like `marcus-cloud` — and reuse it across routines. Without the right connectors attached, the routine will try to curl Telegram and fail on network or auth. This doc does not walk through the claude.ai UI for environments because the UI changes; the routines announcement is the source of truth.
+
+**Read-only versus write routines.** The daily-push example is read-only: it reads one observation and DMs it. Routines that write back to the repo (for example, API-triggered saves that create new observation files) need the environment's push permission enabled and must `git add` / `commit` / `push` at the end of the script. The permission toggle is in the routine config under Permissions. Mixing these in one routine is possible but adds complexity — keep them separate routines when you can.
+
+![Example routine config in claude.ai — name, prompt, repo connector, environment, and schedule visible.](routine-edit.jpeg)
+
+A complete working example — routine prompt, config, bash script, and guardrails — is in [routines/random-observation.md](../routines/random-observation.md). That example is read-only and send-only; adapt it for your own schedule, repo, and messenger.
 
 **Github sync is load-bearing for this path.** The routine runs on a cloud clone of the repo, not on your laptop. So:
 

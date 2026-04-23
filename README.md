@@ -58,6 +58,8 @@ If you do most of your work in an IDE, the Claude Code extension turns the Curso
 
 Marcus can run from Telegram, Discord, or iMessage via Claude Channels, and can push scheduled observations via Claude routines. Both depend on claude.ai login and some setup the repo does not ship. The honest version of the stack, including a reference coordinator agent to copy, is in [docs/phone-setup.md](docs/phone-setup.md).
 
+Both docs above start with a one-line "How to use this doc" pointer: open a fresh Claude Code session, type `Follow @docs/COACH.md`, and paste the doc as the first message. Coach is the planning-partner agent that ships with Meditations and will walk you through the install and setup. The routines app itself lives at [claude.ai/code/routines](https://claude.ai/code/routines) — worth bookmarking, it is not linked from the main claude.ai nav.
+
 ---
 
 ## The eight operations

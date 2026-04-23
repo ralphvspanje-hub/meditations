@@ -1,5 +1,13 @@
 # Marcus Changelog
 
+## 2026-04-23 — concrete routine example and pattern subsection
+
+**What happened:** phone-setup.md previously told readers routines were an option but left them to reverse-engineer the prompt shape, the cloud clone path gotcha, the environment setup, and the script mechanics. This pass ships a complete working example at `routines/random-observation.md` (daily push: pick a random observation, format it with a relative age phrase and a decorative icon, DM via Telegram; read-only on the repo, send-only on the messenger) and adds a "Writing a routine — the pattern" subsection to phone-setup.md covering the bootstrap-plus-file split, the double-nested-path gotcha, what a claude.ai environment is, and the read-only-versus-write distinction. One zoomed-out screenshot of the routine edit UI is embedded. The app URL at claude.ai/code/routines (which is not linked from the main nav) is surfaced in three places — phone-setup.md primary-sources, the pattern subsection, and the README — so readers do not have to hunt for it. README gains a one-line Coach-walkthrough pointer after the phone subsection.
+
+**Changed:** created `routines/`, `routines/README.md`, `routines/random-observation.md`; expanded `docs/phone-setup.md`; added pointer in `README.md`.
+
+**File:** `routines/README.md`, `routines/random-observation.md`, `docs/phone-setup.md`, `README.md`, `CHANGELOG.md`.
+
 ## 2026-04-23 — cursor-setup doc, API-triggered routines subsection
 
 **What happened:** The repo now explicitly names three real capture paths (Cursor/VS Code extension, Claude Channels from phone, Claude routines for scheduled and API-triggered captures) instead of implicitly assuming terminal-only. The new `docs/cursor-setup.md` names the IDE path as the recommended default for users without a 24/7 machine, explains the fresh-window-per-capture discipline as the manual equivalent of the coordinator-subagent pattern, and closes with a concrete first-person account of how the author pairs Cursor as daily driver with API-triggered routines for phone quick-capture. The `phone-setup.md` routines section gains an API-triggered one-shot-save option so single-claim captures from a phone Shortcut are no longer wrongly in the not-fit bucket, and cross-references the Cursor doc's "How one author actually uses this" section for the working-setup example.
